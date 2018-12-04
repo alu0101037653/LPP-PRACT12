@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Modulos do
 
       before :each do
-      		@etq1 = Etiqueta.new("Chocolatina tirma",2132,27,14,61,50,4.5,0.51)
+      		@etq1 = Etiqueta.new("Chocolatina tirma",2132,27,14,65,50,6.5,1.51)
   		@etq2 = Etiqueta.new("Chips ahoy",2108,24,13,64,31,5.8,1.04)
 		@etq3 = Etiqueta.new("Papas Lays",2252,35.1,4.6,47.7,0.6,6.3,1.3)
 		@etq4 = Etiqueta.new("Turron de yema",1879,23,3.2,50,50,9.1,0.05)
@@ -32,50 +32,76 @@ RSpec.describe Modulos do
 
 	      describe "Alimentos" do
 		      it "Debe existir un metodo para obtener el nombre" do
-			      @etq = Etiqueta.new("Nombre",2132,27,14,61,50,4.5,0.51)
+			      @etq = Etiqueta.new("Nombre",2132,27,14,65,50,6.5,1.51)
 			      expect(@etq.nom).to eq("Nombre")
 		      end
 
 		      it "Debe existir un metodo para obtener el valor energetico" do
-			      @etq = Etiqueta.new("Nombre",2132,27,14,61,50,4.5,0.51)
+			      @etq = Etiqueta.new("Nombre",2132,27,14,65,50,6.5,1.51)
 			      expect(@etq.val).to eq(2132)
 		      end
 
 		      it "Debe existir un metodo para obtener la cantidad de grasas" do
-			      @etq = Etiqueta.new("Nombre",2132,27,14,61,50,4.5,0.51)
+			      @etq = Etiqueta.new("Nombre",2132,27,14,65,50,6.5,1.51)
 			      expect(@etq.gras).to eq(27)
 		      end
 
 		      it "Debe existir un metodo para obtener la cantidad de grasas saturadas" do
-			      @etq = Etiqueta.new("Nombre",2132,27,14,61,50,4.5,0.51)
+			      @etq = Etiqueta.new("Nombre",2132,27,14,65,50,6.5,1.51)
 			      expect(@etq.gras_sa).to eq(14)
 		      end
 
 		      it "Debe existir un metodo para obtener la cantidad de hidratos de carbono" do
-			      @etq = Etiqueta.new("Nombre",2132,27,14,61,50,4.5,0.51)
-			      expect(@etq.hc).to eq(61)
+			      @etq = Etiqueta.new("Nombre",2132,27,14,65,50,6.5,1.51)
+			      expect(@etq.hc).to eq(65)
 		      end
 
 		      it "Debe existir un metodo para obtener la cantidad de azucares" do
-			      @etq = Etiqueta.new("Nombre",2132,27,14,61,50,4.5,0.51)
+			      @etq = Etiqueta.new("Nombre",2132,27,14,65,50,6.5,1.51)
 			      expect(@etq.azu).to eq(50)
 		      end
 
 		      it "Debe existir un metodo para obtener la cantidad de proteinas" do
-			      @etq = Etiqueta.new("Nombre",2132,27,14,61,50,4.5,0.51)
-			      expect(@etq.pro).to eq(4.5)
+			      @etq = Etiqueta.new("Nombre",2132,27,14,65,50,6.5,1.51)
+			      expect(@etq.pro).to eq(6.5)
 		      end
 
 		      it "Debe existir un metodo para obtener la cantidad de sal" do
-			      @etq = Etiqueta.new("Nombre",2132,27,14,61,50,4.5,0.51)
-			      expect(@etq.sal).to eq(0.51)
+			      @etq = Etiqueta.new("Nombre",2132,27,14,65,50,6.5,1.51)
+			      expect(@etq.sal).to eq(1.51)
+		      end
+	      end
+
+	      describe "Comparar la informacion nutricional entre dos etiquetas" do
+		      it "Mayor" do
+			      expect(@etq1 > @etq2).to eq(true)
+		      end
+
+		      it "Mayor o igual" do
+			      expect(@etq1 >= @etq2).to eq(true)
+		      end
+
+		      it "Menor" do
+			      expect(@etq2 < @etq1).to eq(true)
+		      end
+
+		      it "Menor o igual" do
+			      expect(@etq2 <= @etq1).to eq(true)
+		      end
+
+		      it "Igual" do
+			      expect(@etq1 == @etq1).to eq(true)
+		      end
+
+		      it "Diferente" do
+			      expect(@etq1 != @etq2).to eq(true)
 		      end
 	      end
       end
 
       describe List do
 	      it "Se puede insertar un elemento por el Head" do
-		      @etq = Etiqueta.new("Nombre",2132,27,14,61,50,4.5,0.51)
+		      @etq = Etiqueta.new("Nombre",2132,27,14,65,50,6.5,1.51)
 		      @l = List.new()
 		      @l.push_start(@etq)
 	      end

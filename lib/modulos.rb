@@ -3,6 +3,7 @@ require "modulos/version"
 Node = Struct.new(:value, :next, :prev)
 
 class Etiqueta
+	include Comparable
 	attr_reader :nom, :val, :gras, :gras_sa, :hc, :azu, :pro, :sal
 
 	def initialize(nom, val, gras, gras_sa, hc, azu, pro, sal)
@@ -20,9 +21,22 @@ class Etiqueta
 		"#{self.class}: #{@nom},#{@val},#{@gras},#{@gras_sa},#{@hc},#{@azu},#{@pro},#{@sal}"
 	end
 
+	def <=>(other)
+		return @nom <=> other.nom #unless @nom && other.nom == @nom
+		return @val <=> other.val #unless @val && other.val == @val
+		return @gras <=> other.gras # unless @gras && other.gras = @gras
+		return @gras_sa <=> other.gras_sa # unless @gras_sa && other.gras_sa == @gras_sa
+		return @hc <=> other.hc #unless @hc && other.hc == @hc
+		return @azu <=> other.azu #unless @azu && other.azu == @azu
+		return @pro <=> other.pro #unless @pro == other.pro
+		return @sal <=> other.sal
+	end
+
+
 end
 
 class List
+	include Enumerable
 	attr_reader :Size, :Head, :Tail
 
 	def initialize()
@@ -107,6 +121,7 @@ end
 
 module Valoracion
 	class Nutricion
+		include Comparable
 		attr_reader :peso, :al, :cin, :ca, :so
 
 		def initialize(peso, al, cin, ca, so)
@@ -119,6 +134,13 @@ module Valoracion
 
 		def to_s()
 			"#{self.class}: #{@peso},#{@al},#{@cin},#{@ca},#{@so}"
+		end
+
+		def <=>(other)
+			return @peso <=> other.peso
+			return @al <=> other.al
+			return @cin <=> other.cin 
+			return @ca <=> other.ca
 		end
 
 		def masacorporal
