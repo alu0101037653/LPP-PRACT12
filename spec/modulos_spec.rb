@@ -11,7 +11,7 @@ RSpec.describe Modulos do
 
 		@nut1 = Valoracion::Sujeto.new(1,70.0,1.78,65.0,90.0,1)
 		@nut2 = Valoracion::Sujeto.new(0,80.0,1.8,75.0,95.0,0)
-		@nut3 = Valoracion::Sujeto.new(0,65.0,1.7,60.0,90.0,0)
+		@nut3 = Valoracion::Sujeto.new(0,65.0,1.6,60.0,90.0,0)
 		@nut4 = Valoracion::Sujeto.new(1,75.0,1.68,70.0,95.0,1)
 		@nut5 = Valoracion::Sujeto.new(1,79.0,1.65,80.0,85.0,1)
 
@@ -202,6 +202,32 @@ RSpec.describe Modulos do
 			      expect(aux.value.masacorporal < aux2.value.masacorporal).to eq(true)
 			      aux2 = aux2.next
 			      aux = aux.next
+		      end
+	      end
+	      
+	      describe "Comparar la valoracion nutricional entre dos individuos" do
+		      it "Mayor" do
+			      expect(@nut4 > @nut3).to eq(true)
+		      end
+
+		      it "Mayor o igual" do
+			      expect(@nut4 >= @nut3).to eq(true)
+		      end
+
+		      it "Menor" do
+			      expect(@nut3 < @nut4).to eq(true)
+		      end
+
+		      it "Menor o igual" do
+			      expect(@nut3 <= @nut4).to eq(true)
+		      end
+
+		      it "Igual" do
+			      expect(@nut3 == @nut3).to eq(true)
+		      end
+
+		      it "Diferente" do
+			      expect(@nut3 != @nut4).to eq(true)
 		      end
 	      end
       end
