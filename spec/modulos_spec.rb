@@ -16,6 +16,7 @@ RSpec.describe Modulos do
 		@nut5 = Valoracion::Sujeto.new(1,79.0,1.65,80.0,85.0,1)
 
 		@l = List.new()
+		@l2 = List.new()
 
       end
 
@@ -148,6 +149,70 @@ RSpec.describe Modulos do
 		      @l.push_end(@etq4)
 		      @l.push_end(@etq5)
 	      end
+
+	      describe "Enumerable - Etiqueta" do
+		      it "Metodo max" do
+			      @l2.push_start(@etq1)
+			      @l2.push_start(@etq2)
+			      expect(@l2.max).to eq(@etq1)
+		      end
+
+		      it "Metodo min" do
+			      @l2.push_start(@etq1)
+			      @l2.push_start(@etq2)
+			      expect(@l2.min).to eq(@etq2)
+		      end
+
+		      it "Metodo sort" do
+			      @l2.push_start(@etq1)
+			      @l2.push_start(@etq2)
+			      expect(@l2.sort).to eq([@etq2,@etq1])
+		      end
+
+		      it "Metodo collect" do
+			      @l2.push_start(@etq1)
+			      expect(@l2.map{|i| i}).to eq([@etq1])
+			      expect(@l2.collect{|i| i}).to eq([@etq1])
+		      end
+
+		      it "Metodo select" do
+			      @l2.push_start(@etq1)
+			      expect(@l2.select{|i| i}).to eq([@etq1])
+		      end
+	      end
+
+	      describe "Enumerable - Valoracion" do
+		      it "Metodo max" do
+			      @l2.push_start(@nut3)
+			      @l2.push_start(@nut4)
+			      expect(@l2.max).to eq(@nut4)
+		      end
+
+		      it "Metodo min" do
+			      @l2.push_start(@nut3)
+			      @l2.push_start(@nut4)
+			      expect(@l2.min).to eq(@nut3)
+		      end
+
+		      it "Metodo sort" do
+			      @l2.push_start(@nut3)
+			      @l2.push_start(@nut4)
+			      expect(@l2.sort).to eq([@nut3,@nut4])
+		      end
+
+		      it "Metodo collect" do
+			      @l2.push_start(@nut3)
+			      expect(@l2.map{|i| i}).to eq([@nut3])
+			      expect(@l2.collect{|i| i}).to eq([@nut3])
+		      end
+
+		      it "Metodo select" do
+			      @l2.push_start(@nut3)
+			      expect(@l2.select{|i| i}).to eq([@nut3])
+		      end
+	      end
+
+
       end
 
       describe Valoracion::Sujeto do

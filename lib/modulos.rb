@@ -39,7 +39,7 @@ class List
 	include Enumerable
 	attr_reader :Size, :Head, :Tail
 
-	def initialize()
+	def initialize(value = nil)
 		@Size = 0
 		@Head = nil
 		@Tail = nil
@@ -102,6 +102,15 @@ class List
 
 	def get_size()
 		@Size
+	end
+
+	def each
+		return nil unless @Size > 0
+		aux = @Head
+		until aux.nil?
+			yield aux.value
+			aux = aux.next
+		end
 	end
 
 	def to_s()
