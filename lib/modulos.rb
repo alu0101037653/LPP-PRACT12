@@ -22,13 +22,13 @@ class Etiqueta
 	end
 
 	def <=>(other)
-		return @nom <=> other.nom #unless @nom && other.nom == @nom
-		return @val <=> other.val #unless @val && other.val == @val
-		return @gras <=> other.gras # unless @gras && other.gras = @gras
-		return @gras_sa <=> other.gras_sa # unless @gras_sa && other.gras_sa == @gras_sa
-		return @hc <=> other.hc #unless @hc && other.hc == @hc
-		return @azu <=> other.azu #unless @azu && other.azu == @azu
-		return @pro <=> other.pro #unless @pro == other.pro
+		return @nom <=> other.nom 
+		return @val <=> other.val 
+		return @gras <=> other.gras 
+		return @gras_sa <=> other.gras_sa 
+		return @hc <=> other.hc 
+		return @azu <=> other.azu 
+		return @pro <=> other.pro 
 		return @sal <=> other.sal
 	end
 
