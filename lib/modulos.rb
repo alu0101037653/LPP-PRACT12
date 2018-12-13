@@ -35,6 +35,24 @@ class Etiqueta
 
 end
 
+class Comida < Etiqueta
+	attr_reader :lipido, :fibra
+
+		def initialize(nom, val, gras, gras_sa, hc, azu, pro, sal, lip, fibra)
+			super(nom, val, gras, gras_sa, hc, azu, pro, sal)
+			@lip = lip
+			@fibra = fibra
+		end
+
+		def to_s()
+			"#{self.class}: #{@nom},#{@val},#{@gras},#{@gras_sa},#{@hc},#{@azu},#{@pro},#{@sal},#{@lip},#{@fibra}"
+		end
+
+		def valor_energetico
+			return (9 * @gras) + (4* @hc) + (2.4 * @azu) + (4 * @lip) + (2 * @fibra) + (4 * @pro) + (6 * @sal)
+		end
+	end
+
 class List
 	include Enumerable
 	attr_reader :Size, :Head, :Tail
@@ -128,26 +146,50 @@ class List
 	end
 end
 
+class Menu
+	attr_reader :lista
+	def initialize
+		@lista = List.new()
+	end
+
+	def add_alimento(alimento)
+		@lista.push_end(alimento)
+	end
+
+	def to_s
+		@lista.to_s
+	end
+
+	def energia
+		energy=0
+		@lista.collect{|entry| energy = energy + entry.valor_energetico}
+		return energy
+	end
+end
+
+
 module Valoracion
 	class Nutricion
 		include Comparable
-		attr_reader :peso, :al, :cin, :ca, :so
+		attr_reader :peso, :al, :edad, :cin, :ca, :so
 
-		def initialize(peso, al, cin, ca, so)
+		def initialize(peso, al, edad, cin, ca, so)
 			@peso = peso
 			@al = al
+			@edad = edad
 			@cin = cin
 			@ca = ca
 			@so = so
 		end
 
 		def to_s()
-			"#{self.class}: #{@peso},#{@al},#{@cin},#{@ca},#{@so}"
+			"#{self.class}: #{@peso},#{@al},#{@edad},#{@cin},#{@ca},#{@so}"
 		end
 
 		def <=>(other)
 			return @peso <=> other.peso
 			return @al <=> other.al
+			return @edad <=> other.edad
 			return @cin <=> other.cin 
 			return @ca <=> other.ca
 		end
@@ -182,7 +224,7 @@ module Valoracion
 			rcc = grasaabdominal
 			rcc.round(2)
 
-			if @sexo == 0
+			if @so == 0
 				if ((rcc >= 0.72) && (rcc <= 0.75))
 					"RCC = #{rcc}; Bajo"
 				elsif ((rcc >= 0.78) && (rcc <= 0.82))
@@ -190,7 +232,7 @@ module Valoracion
 				elsif rcc > 0.82
 					"RCC = #{rcc}; Alto"
 				end
-			elsif @sexo == 1
+			elsif @so == 1
 				if ((rcc >= 0.83) && (rcc <= 0.88))
 					"RCC = #{rcc}; Bajo"
 				elsif ((rcc >= 0.88) && (rcc <= 0.95))
@@ -208,8 +250,8 @@ module Valoracion
 	class Sujeto < Nutricion
 		attr_reader :paciente, :tratamiento
 
-		def initialize(paciente, peso, al, cin, ca, so)
-			super(peso,al,cin,ca,so)
+		def initialize(paciente, peso, edad, al, cin, ca, so)
+			super(peso,al,edad,cin,ca,so)
 			@paciente = paciente
 			imc = masacorporal
 			imc.round(2)
@@ -234,7 +276,53 @@ module Valoracion
 				tratamient = "Esta en tratamiento para la obesidad"
 			end
 
-			"(#{@peso},#{@al},#{@cin},#{@ca},#{@so},#{pacient},#{tratamient})"
+			"(#{@peso},#{@al},#{@edad},#{@cin},#{@ca},#{@so},#{pacient},#{tratamient})"
 		end
+	end
+
+	class Individuo < Nutricion
+		attr_reader :factor_a_f, :peso_t_i, :gasto_e_b, :efecto_t, :gasto_a_f, :gasto_e_t
+
+ 		def initialize(factor_a_f, peso, al, edad, cin, ca, so)
+                        super(peso, al, edad, cin, ca, so)
+			@factor_a_f = factor_a_f
+
+			if @factor_a_f == "Reposo"
+				factor_a_f = 0.0
+			elsif @factor_a_f == "Actividad ligera"
+				factor_a_f = 0.12
+			elsif @factor_a_f == "Actividad moderada"
+				factor_a_f = 0.27
+			elsif @factor_a_f == "Actividad intensa"
+				factor_a_f = 0.54
+			else
+				factor_a_f =0
+			end
+
+			@peso_t_i = (al - 150) * 0.75 + 50
+			if @so == 0
+				@gasto_e_b = (10 * peso) + (6.25 * al) - (5 * edad) - 161
+			else
+				@gasto_e_b = (10 * peso) + (6.25 * al) - (5 * edad) +5
+			end
+
+			@efecto_t = @gasto_e_b * 0.1
+			@gasto_a_f = @gasto_e_b * factor_a_f
+			@gasto_e_t = @gasto_e_b + @efecto_t + @gasto_a_f
+
+		end
+
+		def to_s
+                        "(#{@factor_a_f},#{@peso},#{@al},#{@edad},#{@cin},#{@ca},#{@so})"
+                end
+
+		def exigencia_c(cal_menu)
+                        if cal_menu < (@gasto_e_t - (@gasto_e_t * 0.1))
+                                "La cantidad de la alimentación no es suficiente para cubrir las exigencias calóricas del organismo"
+                        elsif cal_menu > (@gasto_e_t + (@gasto_e_t * 0.1))
+				"La cantidad de la alimentación es suficiente para cubrir las exigencias calóricas del organismo y mantiene el equilibrio de su balance"
+                        end
+                end
+
 	end
 end

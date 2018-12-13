@@ -9,14 +9,32 @@ RSpec.describe Modulos do
 		@etq4 = Etiqueta.new("Turron de yema",1879,23,3.2,50,50,9.1,0.05)
 		@etq5 = Etiqueta.new("Oreo",2057,21,10,69,39,4.8,0.83)
 
-		@nut1 = Valoracion::Sujeto.new(1,70.0,1.78,65.0,90.0,1)
-		@nut2 = Valoracion::Sujeto.new(0,80.0,1.8,75.0,95.0,0)
-		@nut3 = Valoracion::Sujeto.new(0,65.0,1.6,60.0,90.0,0)
-		@nut4 = Valoracion::Sujeto.new(1,75.0,1.68,70.0,95.0,1)
-		@nut5 = Valoracion::Sujeto.new(1,79.0,1.65,80.0,85.0,1)
+		@nut1 = Valoracion::Sujeto.new(1,70.0,1.78,20,65.0,90.0,1)
+		@nut2 = Valoracion::Sujeto.new(0,80.0,1.8,35,75.0,95.0,0)
+		@nut3 = Valoracion::Sujeto.new(0,65.0,1.6,14,60.0,90.0,0)
+		@nut4 = Valoracion::Sujeto.new(1,75.0,1.68,45,70.0,95.0,1)
+		@nut5 = Valoracion::Sujeto.new(1,79.0,1.65,28,80.0,85.0,1)
 
 		@l = List.new()
 		@l2 = List.new()
+
+		@menu = Menu.new()
+		@comida1 = Comida.new("Chocolatina tirma",2132,27,14,65,50,6.5,1.51,4,8)
+		@comida2 = Comida.new("Chips ahoy",2108,24,13,64,31,5.8,1.04,5,2.5)
+		@comida3 = Comida.new("Papas Lays",2252,35.1,4.6,47.7,0.6,6.3,1.3,8,4.6)
+		@comida4 = Comida.new("Turron de yema",1879,23,3.2,50,50,9.1,0.05,6,9.1)
+		@comida5 = Comida.new("Oreo",2057,21,10,69,39,4.8,0.83,4.5,1)
+
+
+		@lista_menu = List.new()
+
+		@indiv1 = Valoracion::Individuo.new("Actividad moderada",70.0,1.78,20,65.0,90.0,1)
+                @indiv2 = Valoracion::Individuo.new("Actividad ligera",80.0,1.8,35,75.0,95.0,0)
+                @indiv3 = Valoracion::Individuo.new("Actividad intensa",65.0,1.6,14,60.0,90.0,0)
+                @indiv4 = Valoracion::Individuo.new("Actividad ligera",75.0,1.68,45,70.0,95.0,1)
+                @indiv5 = Valoracion::Individuo.new("Reposo",79.0,1.65,28,80.0,85.0,1)
+
+
 
       end
 
@@ -217,7 +235,7 @@ RSpec.describe Modulos do
 
       describe Valoracion::Sujeto do
 	      it "Se debe crear individuos" do
-		      @suj = Valoracion::Sujeto.new(1,70.0,1.78,65.0,90.0,1)
+		      @suj = Valoracion::Sujeto.new(1,70.0,1.78,20,65.0,90.0,1)
 	      end
 
 	      it "Se debe comprobar la clase" do
@@ -296,4 +314,29 @@ RSpec.describe Modulos do
 		      end
 	      end
       end
+
+      describe Valoracion::Individuo do
+
+		it "to_s" do
+			expect(@indiv1.to_s).to eq("(Actividad moderada,70.0,1.78,20,65.0,90.0,1)")
+		end
+
+		it "exigencias calóricas" do
+                        @menu.add_alimento(@comida1)
+                        @menu.add_alimento(@comida2)
+                        @menu.add_alimento(@comida3)
+                        @menu.add_alimento(@comida4)
+                        @menu.add_alimento(@comida5)
+
+			expect(@indiv1.exigencia_c(@menu.energia)).to eq("La cantidad de la alimentación es suficiente para cubrir las exigencias calóricas del organismo y mantiene el equilibrio de su balance")
+			expect(@indiv2.exigencia_c(@menu.energia)).to eq("La cantidad de la alimentación es suficiente para cubrir las exigencias calóricas del organismo y mantiene el equilibrio de su balance")
+			expect(@indiv3.exigencia_c(@menu.energia)).to eq("La cantidad de la alimentación es suficiente para cubrir las exigencias calóricas del organismo y mantiene el equilibrio de su balance")
+			expect(@indiv4.exigencia_c(@menu.energia)).to eq("La cantidad de la alimentación es suficiente para cubrir las exigencias calóricas del organismo y mantiene el equilibrio de su balance")
+			expect(@indiv5.exigencia_c(@menu.energia)).to eq("La cantidad de la alimentación es suficiente para cubrir las exigencias calóricas del organismo y mantiene el equilibrio de su balance")
+			
+
+
+
+		end
+	end
 end

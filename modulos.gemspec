@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Modulos}
   spec.description   = %q{Aprendemos a utilizar los modulos}
-  spec.homepage      = "https://github.com/alu0101037653/LPP-pract09"
+  spec.homepage      = "https://github.com/alu0101037653/LPP-PRACT10"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
