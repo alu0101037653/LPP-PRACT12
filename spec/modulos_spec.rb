@@ -14,6 +14,11 @@ RSpec.describe Modulos do
 		@nut3 = Valoracion::Sujeto.new(0,65.0,1.6,14,60.0,90.0,0)
 		@nut4 = Valoracion::Sujeto.new(1,75.0,1.68,45,70.0,95.0,1)
 		@nut5 = Valoracion::Sujeto.new(1,79.0,1.65,28,80.0,85.0,1)
+		@nut6 = Valoracion::Sujeto.new(0,68.0,1.73,25,79.0,78.0,1)
+		@nut7 = Valoracion::Sujeto.new(1,74.0,1.7,31,69.0,75.0,1)
+		@nut8 = Valoracion::Sujeto.new(1,81.0,1.78,40,70.0,85.0,0)
+		@nut9 = Valoracion::Sujeto.new(0,65.0,1.75,19,60.0,90.0,1)
+		@nut10 = Valoracion::Sujeto.new(0,70.0,1.67,23,78.0,85.0,0)
 
 		@l = List.new()
 		@l2 = List.new()
