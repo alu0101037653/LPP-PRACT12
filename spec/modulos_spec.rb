@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'benchmark'
+include Benchmark
 
 RSpec.describe Modulos do
 
@@ -68,7 +70,7 @@ RSpec.describe Modulos do
 
       end
 
-      describe "#Benchmark" do
+      describe "Orden" do
 	      it "Ordenar lista con for" do
 		      expect(@sujetos.sort_for).to eq([@nut3, @nut9, @nut6, @nut10, @nut1, @nut7, @nut4, @nut5, @nut2, @nut8])
 	      end
@@ -84,6 +86,30 @@ RSpec.describe Modulos do
 	      it "Ordenar array con each" do
 		      expect(@menus.sort_each).to eq([@menu3, @menu8, @menu5, @menu6, @menu1, @menu9, @menu7, @menu2, @menu10, @menu4])
 	      end
+
+	      it "Ordenar lista con sort" do
+		      expect(@sujetos.sort).to eq([@nut3, @nut9, @nut6, @nut10, @nut1, @nut7, @nut4, @nut5, @nut2, @nut8])
+	      end
+
+	      it "Ordenar array con sort" do
+		      @menuskcal = @menus.map do |menu|
+			      menu.kcal_each
+		      end
+		      expect(@menuskcal.sort).to eq([529.0, 927.6, 975.3, 1013.2, 1060.9, 1422.8, 1459.5, 1470.5, 1504.3, 1511.3])
+	      end
+
+	      it "Benchmark" do
+		      Benchmark.benchmark(CAPTION, 7, FORMAT, ">total:", ">avg:") do |x|
+			      forlist = x.report("For lista:") {vec1 = @sujetos.sort_for}
+			      forarray = x.report("For array:") {vec2 = @menus.sort_for}
+			      eachlist = x.report("each lista:") {vec3 = @sujetos.sort_each}
+                              eacharray = x.report("each array:") {vec4 = @menus.sort_each}
+			      sortlist = x.report("sort lista:") {vec5 = @sujetos.sort}
+			      sortarray = x.report("sort array:") {vec6 = @menus.map{ |menu| menu.kcal_each }.sort}
+			      [forlist+forarray+eachlist+eacharray+sortlist+sortarray, (forlist+forarray+eachlist+eacharray+sortlist+sortarray)/6]
+		      end
+	      end
+
       end
 
 
