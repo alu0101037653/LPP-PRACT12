@@ -76,6 +76,14 @@ RSpec.describe Modulos do
 	      it "Ordenar array con for" do
 		      expect(@menus.sort_for).to eq([@menu3, @menu8, @menu5, @menu6, @menu1, @menu9, @menu7, @menu2, @menu10, @menu4])
 	      end
+
+	      it "Ordenar lista con each" do
+		      expect(@sujetos.sort_each).to eq([@nut3, @nut9, @nut6, @nut10, @nut1, @nut7, @nut4, @nut5, @nut2, @nut8])
+	      end
+
+	      it "Ordenar array con each" do
+		      expect(@menus.sort_each).to eq([@menu3, @menu8, @menu5, @menu6, @menu1, @menu9, @menu7, @menu2, @menu10, @menu4])
+	      end
       end
 
 

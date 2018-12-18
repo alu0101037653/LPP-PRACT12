@@ -153,6 +153,29 @@ class List
 		return sorted
 	end
 
+	def sort_each
+		sorted = [@Head.value]
+		self.each_with_index do |x, pos_x|
+			if (pos_x != 0)
+				sorted.each_with_index do |y, pos_y|
+					if (pos_y == sorted.size - 1)
+						if (x < y)
+							sorted.insert(pos_y, x)
+							break
+						else
+							sorted.push(x)
+							break
+						end
+					elsif(x < y)
+						sorted.insert(pos_y, x)
+						break
+					end
+				end
+			end
+		end
+		return sorted
+	end
+
 	def to_s()
 		cadena = "{"
 		aux = self.Head
@@ -190,30 +213,57 @@ class Menu
 end
 
 class Array
-                def kcal_for
-                        total = 0
-                        for i in (0...self.size)
-                                total += self[i].valorEnergeticoKcal
-                        end
-                        total
-                end
+       	def kcal_for
+	       	total = 0
+		for i in (0...self.size)
+			total += self[i].valorEnergeticoKcal
+		end
+		total
+	end
+	
+	def sort_for
+                sorted = [self[0]]
+                for i in (1...self.size)
+			actual = self[i]
+                        for j in (0..sorted.size)
+				if (j == sorted.size)
+					sorted.push(actual)
+                                elsif (actual.kcal_for < sorted[j].kcal_for)
+					sorted.insert(j, actual)
+                                        break
+				end
+			end
+		end
+		return sorted
+	end
 
-                def sort_for
-                        sorted = [self[0]]
-                        for i in (1...self.size)
-                                actual = self[i]
-                                for j in (0..sorted.size)
-                                        if (j == sorted.size)
-                                                sorted.push(actual)
-                                        elsif (actual.kcal_for < sorted[j].kcal_for)
-                                                sorted.insert(j, actual)
-                                                break
-                                        end
-                                end
-                        end
-                        return sorted
-                end
-        end
+	def kcal_each
+		self.collect{|comida| comida.valorEnergeticoKcal;}.reduce(:+).round(2)
+	end
+
+	def sort_each
+		sorted = [self[0]]
+		self.each_with_index do |x, pos_x|
+			if (pos_x != 0)
+				sorted.each_with_index do |y, pos_y|
+					if (pos_y == sorted.size - 1)
+						if (x.kcal_each < y.kcal_each)
+							sorted.insert(pos_y, x)
+							break
+						else
+							sorted.push(x)
+							break
+						end
+					elsif (x.kcal_each < y.kcal_each)
+						sorted.insert(pos_y, x)
+						break
+					end
+				end
+			end
+		end
+		return sorted
+	end
+end
 
 module Valoracion
 	class Nutricion
