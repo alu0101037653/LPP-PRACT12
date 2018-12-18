@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Modulos}
   spec.description   = %q{Aprendemos a utilizar los modulos}
-  spec.homepage      = "https://github.com/alu0101037653/LPP-PRACT10"
+  spec.homepage      = "https://github.com/alu0101037653/LPP-PRACT11"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
@@ -37,4 +37,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard"
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency "guard-bundler"
+  spec.add_development_dependency "coveralls"
 end
