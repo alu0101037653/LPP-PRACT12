@@ -17,6 +17,10 @@ class Etiqueta
 		@sal = sal
 	end
 
+	def valorEnergeticoKcal
+		(@gras * 9) + (@hc * 4) + (@pro * 4)
+	end
+
 	def to_s()
 		"#{self.class}: #{@nom},#{@val},#{@gras},#{@gras_sa},#{@hc},#{@azu},#{@pro},#{@sal}"
 	end
@@ -131,6 +135,24 @@ class List
 		end
 	end
 
+	def sort_for
+		sorted = [@Head.value]
+		aux = @Head
+		sz = @Size
+		for i in (1...sz)
+			aux = aux.next
+			for j in (0..sorted.size)
+				if (j == sorted.size)
+					sorted.push(aux.value)
+				elsif (aux.value < sorted[j])
+					sorted.insert(j, aux.value)
+					break
+				end
+			end
+		end
+		return sorted
+	end
+
 	def to_s()
 		cadena = "{"
 		aux = self.Head
@@ -167,6 +189,31 @@ class Menu
 	end
 end
 
+class Array
+                def kcal_for
+                        total = 0
+                        for i in (0...self.size)
+                                total += self[i].valorEnergeticoKcal
+                        end
+                        total
+                end
+
+                def sort_for
+                        sorted = [self[0]]
+                        for i in (1...self.size)
+                                actual = self[i]
+                                for j in (0..sorted.size)
+                                        if (j == sorted.size)
+                                                sorted.push(actual)
+                                        elsif (actual.kcal_for < sorted[j].kcal_for)
+                                                sorted.insert(j, actual)
+                                                break
+                                        end
+                                end
+                        end
+                        return sorted
+                end
+        end
 
 module Valoracion
 	class Nutricion
@@ -250,7 +297,7 @@ module Valoracion
 	class Sujeto < Nutricion
 		attr_reader :paciente, :tratamiento
 
-		def initialize(paciente, peso, edad, al, cin, ca, so)
+		def initialize(paciente, peso, al, edad, cin, ca, so)
 			super(peso,al,edad,cin,ca,so)
 			@paciente = paciente
 			imc = masacorporal
@@ -280,13 +327,15 @@ module Valoracion
 		end
 	end
 
+
+
+
 	class Individuo < Nutricion
 		attr_reader :factor_a_f, :peso_t_i, :gasto_e_b, :efecto_t, :gasto_a_f, :gasto_e_t
 
  		def initialize(factor_a_f, peso, al, edad, cin, ca, so)
                         super(peso, al, edad, cin, ca, so)
 			@factor_a_f = factor_a_f
-
 			if @factor_a_f == "Reposo"
 				factor_a_f = 0.0
 			elsif @factor_a_f == "Actividad ligera"

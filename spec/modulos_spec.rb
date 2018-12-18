@@ -20,6 +20,31 @@ RSpec.describe Modulos do
 		@nut9 = Valoracion::Sujeto.new(0,65.0,1.75,19,60.0,90.0,1)
 		@nut10 = Valoracion::Sujeto.new(0,70.0,1.67,23,78.0,85.0,0)
 
+		@menu1 = [@etq1, @etq3]
+		@menu2 = [@etq2, @etq3, @etq4]
+		@menu3 = [@etq1]
+		@menu4 = [@etq2, @etq3, @etq5]
+		@menu5 = [@etq3, @etq4]
+		@menu6 = [@etq1, @etq5]
+		@menu7 = [@etq3, @etq4, @etq5]
+		@menu8 = [@etq4, @etq5]
+		@menu9 = [@etq2, @etq4, @etq5]
+		@menu10 = [@etq1, @etq3, @etq4]
+
+		@menus = [@menu1, @menu2, @menu3, @menu4, @menu5, @menu6, @menu7, @menu8, @menu9, @menu10]
+
+		@sujetos = List.new
+		@sujetos.push_start(@nut1)
+		@sujetos.push_start(@nut2)
+		@sujetos.push_start(@nut3)
+		@sujetos.push_start(@nut4)
+		@sujetos.push_start(@nut5)
+		@sujetos.push_start(@nut6)
+		@sujetos.push_start(@nut7)
+		@sujetos.push_start(@nut8)
+		@sujetos.push_start(@nut9)
+		@sujetos.push_start(@nut10)
+
 		@l = List.new()
 		@l2 = List.new()
 
@@ -42,6 +67,17 @@ RSpec.describe Modulos do
 
 
       end
+
+      describe "#Benchmark" do
+	      it "Ordenar lista con for" do
+		      expect(@sujetos.sort_for).to eq([@nut3, @nut9, @nut6, @nut10, @nut1, @nut7, @nut4, @nut5, @nut2, @nut8])
+	      end
+
+	      it "Ordenar array con for" do
+		      expect(@menus.sort_for).to eq([@menu3, @menu8, @menu5, @menu6, @menu1, @menu9, @menu7, @menu2, @menu10, @menu4])
+	      end
+      end
+
 
       describe Etiqueta do
 	      describe "Inicializar" do
