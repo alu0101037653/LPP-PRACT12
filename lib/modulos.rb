@@ -2,426 +2,440 @@ require "modulos/version"
 
 Node = Struct.new(:value, :next, :prev)
 
-class Etiqueta
-	include Comparable
-	attr_reader :nom, :val, :gras, :gras_sa, :hc, :azu, :pro, :sal
+class Persona
 
-	def initialize(nom, val, gras, gras_sa, hc, azu, pro, sal)
-		@nom = nom
-		@val = val
-		@gras = gras
-		@gras_sa = gras_sa
-		@hc = hc
-		@azu = azu
-		@pro = pro
-		@sal = sal
-	end
-
-	def valorEnergeticoKcal
-		(@gras * 9) + (@hc * 4) + (@pro * 4)
-	end
-
-	def to_s()
-		"#{self.class}: #{@nom},#{@val},#{@gras},#{@gras_sa},#{@hc},#{@azu},#{@pro},#{@sal}"
-	end
-
-	def <=>(other)
-		return @nom <=> other.nom 
-		return @val <=> other.val 
-		return @gras <=> other.gras 
-		return @gras_sa <=> other.gras_sa 
-		return @hc <=> other.hc 
-		return @azu <=> other.azu 
-		return @pro <=> other.pro 
-		return @sal <=> other.sal
-	end
-
-
-end
-
-class Comida < Etiqueta
-	attr_reader :lipido, :fibra
-
-		def initialize(nom, val, gras, gras_sa, hc, azu, pro, sal, lip, fibra)
-			super(nom, val, gras, gras_sa, hc, azu, pro, sal)
-			@lip = lip
-			@fibra = fibra
-		end
-
-		def to_s()
-			"#{self.class}: #{@nom},#{@val},#{@gras},#{@gras_sa},#{@hc},#{@azu},#{@pro},#{@sal},#{@lip},#{@fibra}"
-		end
-
-		def valor_energetico
-			return (9 * @gras) + (4* @hc) + (2.4 * @azu) + (4 * @lip) + (2 * @fibra) + (4 * @pro) + (6 * @sal)
-		end
-	end
-
-class List
-	include Enumerable
-	attr_reader :Size, :Head, :Tail
-
-	def initialize(value = nil)
-		@Size = 0
-		@Head = nil
-		@Tail = nil
-	end
-
-	def push_start(value)
-		nodo = Node.new(value,nil,nil)
-		if(@Size == 0)
-			@Tail = nodo
-			@Tail.next = nil
-		else
-			@Head.prev = nodo
-			nodo.next = @Head
-		end
-
-		@Head = nodo
-		@Head.prev = nil
-		@Size = @Size + 1
-	end
-
-	def push_end(value)
-		nodo = Node.new(value,nil,nil)
-		if(@Size == 0)
-			@Head = nodo
-			@Head.prev = nil
-		else
-			@Tail.next = nodo
-			nodo.prev = @Tail
-		end
-
-		@Tail = nodo
-		@Tail.next = nil
-		@Size = @Size + 1
-	end
-
-	def pop_start()
-		if(@Size == 0)
-			puts "La lista esta vacia"
-		elsif(@Size == 1)
-			@Head = nil
-			@Size = 0
-		else
-			@Head.next.prev = nil
-			@Head = @Head.next
-			@Size = @Size - 1
-		end
-	end
-
-	def pop_end()
-		if(@Size == 0)
-		elsif(@Size == 1)
-			@Tail = nil
-			@Size = 0
-		else
-			@Tail.prev.next = nil
-			@Tail = @Tail.next
-			@Size = @Size - 1
-		end
-	end
-
-	def get_size()
-		@Size
-	end
-
-	def each
-		return nil unless @Size > 0
-		aux = @Head
-		until aux.nil?
-			yield aux.value
-			aux = aux.next
-		end
-	end
-
-	def sort_for
-		sorted = [@Head.value]
-		aux = @Head
-		sz = @Size
-		for i in (1...sz)
-			aux = aux.next
-			for j in (0..sorted.size)
-				if (j == sorted.size)
-					sorted.push(aux.value)
-				elsif (aux.value < sorted[j])
-					sorted.insert(j, aux.value)
-					break
-				end
-			end
-		end
-		return sorted
-	end
-
-	def sort_each
-		sorted = [@Head.value]
-		self.each_with_index do |x, pos_x|
-			if (pos_x != 0)
-				sorted.each_with_index do |y, pos_y|
-					if (pos_y == sorted.size - 1)
-						if (x < y)
-							sorted.insert(pos_y, x)
-							break
-						else
-							sorted.push(x)
-							break
-						end
-					elsif(x < y)
-						sorted.insert(pos_y, x)
-						break
-					end
-				end
-			end
-		end
-		return sorted
-	end
-
-	def to_s()
-		cadena = "{"
-		aux = self.Head
-		while aux != nil
-			cadena = cadena + aux.value.to_s
-			if(aux.next != nil)
-				cadena = cadena + ", "
-			end
-			aux = aux.next
-		end
-		cadena = cadena + "}"
-		cadena
-	end
-end
-
+    include Comparable
+  
+    attr_reader :nombre, :sexo
+  
+    def initialize(nombre, sexo)
+      @nombre,@sexo = nombre,sexo
+    end
+  
+    def <=> other
+      raise TypeError, "Se esperaba un objeto Persona" unless other.is_a?Persona
+      return 1 if other.is_a?PacienteM
+      return @nombre <=> other.nombre
+    end
+  
+    def to_s
+      "#{@nombre} es un#{@sexo == 'mujer' ? 'a' : nil} #{@sexo}"
+    end
+  
+  end
+  
+  class Paciente < Persona
+  
+    attr_reader :consulta
+  
+    def initialize(nombre,sexo,consulta)
+      super(nombre,sexo)
+      @consulta = consulta
+    end
+  
+    def to_s
+      super.to_s + " con consulta en #{@consulta}"
+    end
+  
+  end
+  
+  class PacienteM < Paciente
+  
+    attr_reader :peso,:talla,:edad,:cintura,:cadera, :menu
+  
+    @@factorAct = {'ninguna' => 0, 'ligera' => 0.12, 'moderada' => 0.27, 'intensa' => 0.54}
+  
+    def initialize(nombre,sexo,consulta,peso,talla,edad,cintura,cadera,act = 'ninguna')
+      super(nombre,sexo,consulta)
+      @peso,@talla,@edad,@cintura,@cadera,@act = peso,talla,edad,cintura,cadera,act
+    end
+  
+    def addMenu(menu)
+      @menu = menu
+    end
+  
+    def menuOk?
+      ((total * 0.9)..(total * 1.1)).include? @menu.kcal
+    end
+  
+    def pesoIdeal
+      (talla * 100 - 150) * 0.75 + 50
+    end
+  
+    def basal
+      (10 * peso + 6.25 * talla * 100 - 5 * edad + (sexo == 'mujer'? -161 : 5)).round(2)
+    end
+  
+    def termogeno
+      (basal * 0.1).round(2)
+    end
+  
+    def actividad
+      (basal * @@factorAct[@act]).round(2)
+    end
+  
+    def total
+      basal + termogeno + actividad
+    end
+  
+    def imc
+      @peso/(@talla * @talla)
+    end
+  
+    def to_s
+      super.to_s + " y en tratamiento"
+    end
+  
+    def <=> other
+      raise TypeError, "Se esperaba un objeto Persona" unless other.is_a?Persona
+      return self.imc <=> other.imc if other.is_a?PacienteM
+      return -1
+    end
+  
+  end
+  
+  class PacienteT < PacienteM
+  
+    def <=> other
+      raise TypeError, "Se esperaba un objeto Persona" unless other.is_a?Persona
+      return self.total <=> other.total if other.is_a?PacienteT
+      return -1
+    end
+  end
+  
 class Menu
-	attr_reader :lista
-	def initialize
-		@lista = List.new()
-	end
 
-	def add_alimento(alimento)
-		@lista.push_end(alimento)
-	end
+    include Comparable
+  
+    def initialize(day,&block)
+      @day = day
+      @almuerzo = []
+      @cena = []
+      @desayuno = []
+      if block_given?
+        instance_eval &block
+      end
+    end
+  
+    def titulo(str)
+      @title = str
+    end
+  
+    def ingesta(h = {})
+      @min = h[:min] if h[:min]
+      @max = h[:max] if h[:max]
+    end
+  
+    def desayuno(h = {})
+      @desayuno << Label.new(h[:descripcion],h[:gramos],h[:grasas],0,h[:carbohidratos],0,h[:proteinas],
+      h[:sal])
+    end
+  
+    def almuerzo(h = {})
+      @almuerzo << Label.new(h[:descripcion],h[:gramos],h[:grasas],0,h[:carbohidratos],0,h[:proteinas],
+      h[:sal])
+    end
+  
+    def cena(h = {})
+      @cena << Label.new(h[:descripcion],h[:gramos],h[:grasas],0,h[:carbohidratos],0,h[:proteinas],
+      h[:sal])
+    end
+  
+    def kcal
+      (@desayuno.reduce(:+) + @cena.reduce(:+) + @almuerzo.reduce(:+)).round(2)
+    end
+  
+    def <=> (other)
+      self.kcal <=> other.kcal
+    end
+  
+    def to_s
+      table = Table.new
+      table << @day
+      table << '' << 'grasas' << 'carbohidratos' << 'proteinas' << 'sal' << 'valor energético'
+      table << 'Desayuno'
+      @desayuno.each do |label|
+        table << label.nombre << label.grasas << label.hc << label.protei << label.sal << label.kcal
+      end
+      table << ''
+      table << 'Almuerzo'
+      @almuerzo.each do |label|
+        table << label.nombre << label.grasas << label.hc << label.protei << label.sal << label.kcal
+      end
+      table << ''
+      table << 'Cena'
+      @cena.each do |label|
+        table << label.nombre << label.grasas << label.hc << label.protei << label.sal << label.kcal
+      end
+      table << 'Valor energético total' << self.kcal
+      table.to_s
+    end
+  
+    def self.for_sort(menus)
+      for i in (0..menus.size-2)
+        for j in (i+1..menus.size-1)
+          if(menus[i] > menus[j])
+             aux = menus[i];
+             menus[i] = menus[j];
+             menus[j] = aux;
+          end
+        end
+      end
+      menus
+    end
+  
+    def self.each_sort(menus)
+      array = Array.new
+      menus.each do |menu|
+        sz = array.size
+        array.each_with_index do |menu2,i|
+          array.insert(i,menu) if menu2 > menu and sz == array.size
+        end
+        array << menu if sz == array.size
+      end
+      array
+    end
+end    
+class List
 
-	def to_s
-		@lista.to_s
-	end
+    include Enumerable
+    
+      def initialize
+        @sz = 0
+      end
+    
+      def <<(val)
+        node = Node.new(val)
+        if(@head == nil)
+          @head = node
+          @tail = node
+        else
+          node.prev = @tail
+          @tail.next = node
+          @tail = node
+        end
+        @sz += 1
+        self
+      end
+    
+      def unshift(val)
+        node = Node.new(val)
+        if(@head == nil)
+          @head == node
+          @tail == node
+        else
+          node.next = @head
+          @head.prev = node
+          @head = node
+        end
+        @sz -= 1
+      end
+    
+      def insert(pos, *arg)
+        node = @head
+        pos.times do
+          if node != nil
+            node = node.next
+          end
+        end
+        if node == @head
+          self.unshift arg[0]
+          self.insert(1, *arg[1, arg.size - 1])
+        else
+          arg.each do |item|
+            if node == nil
+              self << item
+            else
+              newNode = Node.new(item)
+              newNode.prev = node.prev
+              node.prev.next = newNode
+              newNode.next = node
+              node.prev = newNode
+            end
+          end
+        end
+        @sz += 1
+      end
+    
+      def pop(n = 1)
+        n.times do
+          if(@tail != nil)
+            @tail = @tail.prev
+            @tail.next = nil
+          end
+        end
+        @head = nil if @tail == nil
+        @sz -= 1
+      end
+    
+      def shift(n = 1)
+        n.times do
+          if @head != nil
+            @head = @head.next
+            @head.prev = nil
+          end
+        end
+        @tail = nil if @head == nil
+        @sz -= 1
+      end
+    
+      def empty?
+        @head == nil
+      end
+    
+      def each
+        node = @head
+        while(node != nil)
+          yield node.value
+          node = node.next
+        end
+      end
+    
+      def reverse_each
+        node = @tail
+        while(node != nil)
+          yield node.value
+          node = node.prev
+        end
+      end
+    
+      def for_sort
+        array = self.to_a
+        for i in (0..array.size-2)
+          for j in (i+1..array.size-1)
+            if(array[i] > array[j])
+               aux = array[i]
+               array[i] = array[j]
+               array[j] = aux
+            end
+          end
+        end
+        array
+      end
+    
+      def each_sort
+        array = Array.new
+        self.each do |person|
+          sz = array.size
+          array.each_with_index do |person2,i|
+            array.insert(i,person) if person2 > person and sz == array.size
+          end
+          array << person if sz == array.size
+        end
+        array
+      end
+    
+    end    
 
-	def energia
-		energy=0
-		@lista.collect{|entry| energy = energy + entry.valor_energetico}
-		return energy
-	end
-end
+    class Row < Array
 
-class Array
-       	def kcal_for
-	       	total = 0
-		for i in (0...self.size)
-			total += self[i].valorEnergeticoKcal
-		end
-		total
-	end
-	
-	def sort_for
-                sorted = [self[0]]
-                for i in (1...self.size)
-			actual = self[i]
-                        for j in (0..sorted.size)
-				if (j == sorted.size)
-					sorted.push(actual)
-                                elsif (actual.kcal_for < sorted[j].kcal_for)
-					sorted.insert(j, actual)
-                                        break
-				end
-			end
-		end
-		return sorted
-	end
+        @@cols = []
+      
+        def << parm
+          arg = parm.to_s
+          if(@@cols[size])
+            @@cols[size] = arg.size if arg.size > @@cols[size]
+          else
+            @@cols[size] = arg.size
+          end
+          super arg
+        end
+      
+        def to_s
+          str = String.new
+          self.each_with_index do |cell,i|
+            str << cell + (' ' * (@@cols[i] - cell.size + 1))
+          end
+          str + "\n"
+        end
+      
+      end
+      
+      class Table
+      
+        def initialize
+          @rows = []
+        end
+      
+        def << arg
+          row = Row.new
+          @rows << row
+          row << arg
+        end
+      
+        def to_s
+          str = String.new
+          @rows.each do |row|
+            str << row.to_s
+          end
+          str
+        end
+      
+      end
+      
+    
+class Label
 
-	def kcal_each
-		self.collect{|comida| comida.valorEnergeticoKcal;}.reduce(:+).round(2)
-	end
+  include Comparable
 
-	def sort_each
-		sorted = [self[0]]
-		self.each_with_index do |x, pos_x|
-			if (pos_x != 0)
-				sorted.each_with_index do |y, pos_y|
-					if (pos_y == sorted.size - 1)
-						if (x.kcal_each < y.kcal_each)
-							sorted.insert(pos_y, x)
-							break
-						else
-							sorted.push(x)
-							break
-						end
-					elsif (x.kcal_each < y.kcal_each)
-						sorted.insert(pos_y, x)
-						break
-					end
-				end
-			end
-		end
-		return sorted
-	end
-end
+  attr_reader :nombre, :porcion, :grasas, :grasass, :hc, :azucar, :protei, :sal
 
-module Valoracion
-	class Nutricion
-		include Comparable
-		attr_reader :peso, :al, :edad, :cin, :ca, :so
+  @@ir = {:kj => 8400, :kcal => 2000, :grasas => 70, :grasass => 20,
+     :hc => 260, :azucar => 90, :protei => 50, :sal => 6}
 
-		def initialize(peso, al, edad, cin, ca, so)
-			@peso = peso
-			@al = al
-			@edad = edad
-			@cin = cin
-			@ca = ca
-			@so = so
-		end
+  def initialize(nombre, porcion, grasas, grasass, hc, azucar, protei, sal)
+    @nombre, @porcion, @grasas, @grasass, @hc, @azucar, @protei, @sal =
+    nombre, porcion, grasas, grasass, hc, azucar, protei, sal
+  end
 
-		def to_s()
-			"#{self.class}: #{@peso},#{@al},#{@edad},#{@cin},#{@ca},#{@so}"
-		end
+  def kj
+    grasas * 37 + hc * 17 + protei * 17 + sal * 25
+  end
 
-		def <=>(other)
-			return @peso <=> other.peso
-			return @al <=> other.al
-			return @edad <=> other.edad
-			return @cin <=> other.cin 
-			return @ca <=> other.ca
-		end
+  def kcal
+    grasas * 9 + hc * 4 + protei * 4 + sal * 6
+  end
 
-		def masacorporal
-			imc = (@peso/(@al*@al))
-		end
+  def + (label)
+    self.kcal + label.kcal
+  end
 
-		def resultados_imc
-			imc = masacorporal
-			imc.round(2)
-			if imc < 18.50
-				"IMC = #{imc}; Bajo peso"
-			elsif imc < 25.00
-				"IMC = #{imc}; Adecuado"
-			elsif imc < 30.00
-				"IMC = #{imc}; Sobrepeso"
-			elsif imc < 35.00
-				"IMC = #{imc}; Obesidad grado 1"
-			elsif imc < 40.00 
-				"IMC = #{imc}; Obesidad grado 2"
-			else
-				"IMC = #{imc}; Obesidad grado 3"
-			end
-		end
+  def coerce(arg)
+    [arg,self.kcal]
+  end
 
-		def grasaabdominal
-			rcc = @cin/@ca
-		end
+  def toX(method, arg = nil)
+    if arg == nil
+      ((send(method)*@porcion)/100).round(2)
+    else
+      ((send(method, arg)*@porcion)/100).round(2)
+    end
+  end
 
-		def resultados_rcc
-			rcc = grasaabdominal
-			rcc.round(2)
+  def ir(method)
+    ((send(method)*100)/@@ir[method]).round(2)
+  end
 
-			if @so == 0
-				if ((rcc >= 0.72) && (rcc <= 0.75))
-					"RCC = #{rcc}; Bajo"
-				elsif ((rcc >= 0.78) && (rcc <= 0.82))
-					"RCC = #{rcc}; Moderado"
-				elsif rcc > 0.82
-					"RCC = #{rcc}; Alto"
-				end
-			elsif @so == 1
-				if ((rcc >= 0.83) && (rcc <= 0.88))
-					"RCC = #{rcc}; Bajo"
-				elsif ((rcc >= 0.88) && (rcc <= 0.95))
-					"RCC = #{rcc}; Moderado"
-				elsif ((rcc >= 0.95) && (rcc <= 1.01))
-					"RCC = #{rcc}; Alto"
-				elsif rcc > 1.01
-					"RCC = #{rcc}; Muy alto"
-				end
-			end
-		end
+  def <=>(label)
+    return -1 if self.sal < label.sal
+    return 1 if self.sal > label.sal
+    return self.nombre <=> label.nombre
+  end
 
-	end
-
-	class Sujeto < Nutricion
-		attr_reader :paciente, :tratamiento
-
-		def initialize(paciente, peso, al, edad, cin, ca, so)
-			super(peso,al,edad,cin,ca,so)
-			@paciente = paciente
-			imc = masacorporal
-			imc.round(2)
-
-			if imc < 35.00
-				@tratamiento = 0
-			else
-				@tratamiento = 1
-			end
-		end
-
-		def to_s
-			if @paciente < 1
-				pacient = "No es paciente de una consulta"
-			else
-				pacient = "Es paciente de una consulta"
-			end
-
-			if @tratamiento < 1
-				tratamient = "No esta en tratamiento para la obesidad"
-			else
-				tratamient = "Esta en tratamiento para la obesidad"
-			end
-
-			"(#{@peso},#{@al},#{@edad},#{@cin},#{@ca},#{@so},#{pacient},#{tratamient})"
-		end
-	end
+  def to_s
+    str = String.new
+    str << @nombre << "\n"
+    str << "\t\t\t Por 100g\t IR (100g)\t Por #{@porcion}g\t IR(#{@porcion}g)\n"
+    str << "Valor energético\t #{kj}kJ/#{kcal}kcal\t #{ir(:kcal)}%\t #{toX(:kj)}kJ/#{toX(:kcal)}kcal\t #{toX(:ir,:kcal)}%\n"
+    str <<"Grasas\t\t\t #{@grasas}g\t\t #{ir(:grasas)}%\t\t  #{toX(:grasas)}g\t\t  #{toX(:ir,:grasas)}%\n"
+    str <<"  saturadas:\t\t #{@grasass}g\t\t #{ir(:grasass)}%\t\t  #{toX(:grasass)}g\t\t  #{toX(:ir,:grasass)}%\n"
+    str <<"Hidratos de carbono\t #{@hc}g\t\t #{ir(:hc)}%\t\t  #{toX(:hc)}g\t\t  #{toX(:ir,:hc)}%\n"
+    str <<"  azúcares:\t\t #{@azucar}g\t\t #{ir(:azucar)}%\t\t  #{toX(:azucar)}g\t\t  #{toX(:ir,:azucar)}%\n"
+    str <<"Proteínas\t\t #{@protei}g\t\t #{ir(:protei)}%\t\t  #{toX(:protei)}g\t\t  #{toX(:ir,:protei)}%\n"
+    str <<"Sal\t\t\t #{@sal}g\t\t #{ir(:sal)}%\t\t  #{toX(:sal)}g\t\t  #{toX(:ir,:sal)}%\n"
+  
+    end
+    end
 
 
 
-
-	class Individuo < Nutricion
-		attr_reader :factor_a_f, :peso_t_i, :gasto_e_b, :efecto_t, :gasto_a_f, :gasto_e_t
-
- 		def initialize(factor_a_f, peso, al, edad, cin, ca, so)
-                        super(peso, al, edad, cin, ca, so)
-			@factor_a_f = factor_a_f
-			if @factor_a_f == "Reposo"
-				factor_a_f = 0.0
-			elsif @factor_a_f == "Actividad ligera"
-				factor_a_f = 0.12
-			elsif @factor_a_f == "Actividad moderada"
-				factor_a_f = 0.27
-			elsif @factor_a_f == "Actividad intensa"
-				factor_a_f = 0.54
-			else
-				factor_a_f =0
-			end
-
-			@peso_t_i = (al - 150) * 0.75 + 50
-			if @so == 0
-				@gasto_e_b = (10 * peso) + (6.25 * al) - (5 * edad) - 161
-			else
-				@gasto_e_b = (10 * peso) + (6.25 * al) - (5 * edad) +5
-			end
-
-			@efecto_t = @gasto_e_b * 0.1
-			@gasto_a_f = @gasto_e_b * factor_a_f
-			@gasto_e_t = @gasto_e_b + @efecto_t + @gasto_a_f
-
-		end
-
-		def to_s
-                        "(#{@factor_a_f},#{@peso},#{@al},#{@edad},#{@cin},#{@ca},#{@so})"
-                end
-
-		def exigencia_c(cal_menu)
-                        if cal_menu < (@gasto_e_t - (@gasto_e_t * 0.1))
-                                "La cantidad de la alimentación no es suficiente para cubrir las exigencias calóricas del organismo"
-                        elsif cal_menu > (@gasto_e_t + (@gasto_e_t * 0.1))
-				"La cantidad de la alimentación es suficiente para cubrir las exigencias calóricas del organismo y mantiene el equilibrio de su balance"
-                        end
-                end
-
-	end
-end
